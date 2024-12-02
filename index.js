@@ -1,5 +1,3 @@
-//untuk  membuat database dengan sequelize
-
 import express from "express";
 import dotenv from  "dotenv";
 import cookieParser from "cookie-parser";
@@ -17,6 +15,9 @@ const app = express();
 
 try {
     await db.authenticate();
+    // await db.sync({
+    //     force: true
+    // });
     console.log('Database Connected..');
 
     // Menjadwalkan pembaruan status expired setiap hari pada pukul 00:00
@@ -38,5 +39,5 @@ app.get('/', (req, res) => {
     res.send('Welcome to the API!');
 });
 
-const PORT = process.env.PORT || 5000;  // Gunakan port dari environment variable atau default ke 5000
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
