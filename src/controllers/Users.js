@@ -55,7 +55,7 @@ export const Login = async (req, res) => {
             });
         }
 
-        const match = bcrypt.compareSync(req.body.password, user[0].password);
+        const match = bcrypt.compareSync(req.body.password, user[0].password); 
         if (!match) {
             return res.status(400).json({
                 error: true,
@@ -66,12 +66,13 @@ export const Login = async (req, res) => {
 
         const userId = user[0].id;
         const name = user[0].name;
+        const email = user[0].email;
 
-        const accessToken = jwt.sign({ userId, name }, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '20s'
+        const accessToken = jwt.sign({ userId, name, email }, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: '15m'
         });
-        const refreshToken = jwt.sign({ userId, name }, process.env.REFRESH_TOKEN_SECRET, {
-            expiresIn: '7d'
+        const refreshToken = jwt.sign({userId, name, email}, process.env.REFRESH_TOKEN_SECRET,{
+            expiresIn: '7d' // expired refresh token
         });
 
         await Users.update({ refresh_token: refreshToken }, {
@@ -80,10 +81,10 @@ export const Login = async (req, res) => {
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            maxAge: 24 * 60 * 60 * 1000
         });
 
-        return res.json({
+                return res.json({
             error: false,
             message: "success",
             loginResult: {
@@ -93,7 +94,7 @@ export const Login = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error(error);
+        console.log(error);
         return res.status(500).json({
             error: true,
             message: "Server error",
@@ -101,7 +102,6 @@ export const Login = async (req, res) => {
         });
     }
 };
-
 
 // Logout
 export const Logout = async (req, res) => {
