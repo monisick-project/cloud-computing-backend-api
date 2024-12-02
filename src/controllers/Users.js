@@ -17,28 +17,53 @@ export const getUsers = async (req, res) => {
 // Register
 export const Register = async (req, res) => {
     const { name, email, password, confPassword } = req.body;
-    if (password !== confPassword) return res.status(400).json({ msg: "Password and Confirm Password do not match" });
 
-    const existingUser = await Users.findOne({
-        where: { email: email }
-    });
-    if (existingUser) return res.status(400).json({ msg: "Email is already registered" });
+    // Validasi password minimal 8 karakter
+    if (password.length < 8) {
+        return res.status(400).json({ 
+            msg: "Password must be at least 8 characters long" 
+        });
+    }
 
-    const salt = bcrypt.genSaltSync(10); 
-    const hashPassword = bcrypt.hashSync(password, salt); 
+    if (password !== confPassword) {
+        return res.status(400).json({ 
+            msg: "Password and Confirm Password do not match" 
+        });
+    }
 
     try {
+        // Cek apakah email sudah terdaftar
+        const existingUser = await Users.findOne({
+            where: { email: email }
+        });
+        if (existingUser) {
+            return res.status(400).json({ 
+                msg: "Email is already registered" 
+            });
+        }
+
+        // Enkripsi password
+        const salt = bcrypt.genSaltSync(10);
+        const hashPassword = bcrypt.hashSync(password, salt);
+
+        // Buat pengguna baru
         await Users.create({
             name: name,
             email: email,
             password: hashPassword
         });
-        res.json({ msg: "Successfully Registered" });
+
+        return res.json({ 
+            msg: "Successfully Registered" 
+        });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ msg: "Server error" });
+        console.error(error);
+        return res.status(500).json({ 
+            msg: "Server error" 
+        });
     }
 };
+
 
 // Login
 export const Login = async (req, res) => {
