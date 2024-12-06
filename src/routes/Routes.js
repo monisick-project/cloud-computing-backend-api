@@ -47,7 +47,7 @@ router.delete('/food/:id', verifyToken, deleteFoodEntry);
 // Prediction Food
 router.post("/prediction", verifyToken, Prediction);
 router.post("/savepredict", verifyToken, savePrediction);
-router.get("/monitoring-periods/:monitoringPeriodId/foodspredict", verifyToken, getPredictFood);
+router.get("/:monitoringPeriodId/foodspredict", verifyToken, getPredictFood);
 
 // Daily Log
 router.post("/monitoring-periods/:monitoringPeriodId/logs", verifyToken, createDailyLog);
