@@ -80,3 +80,28 @@ export const savePrediction = async (req, res) => {
         res.status(500).json({ msg: "Server error while saving predictions" });
     }
 };
+
+
+// Mendapat data makanan
+export const getPredictFood = async (req, res) => {
+    const { monitoringPeriodId } = req.params;
+
+    try {
+        const foodReport = await Food.findAll({
+            where: { monitoringPeriodId },
+            attributes: [
+                "foodName",
+                "mass", // Breakfast, Lunch, Dinner
+                "fat",
+                "carbohydrates",
+                "protein",
+                "date"
+            ],
+        });
+
+        res.status(200).json(foodReport);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "Server error while fetching food report" });
+    }
+};
