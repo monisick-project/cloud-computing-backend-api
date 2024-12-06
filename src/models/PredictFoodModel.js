@@ -34,24 +34,19 @@ const Predicts = db.define(
         },
         date: {
             type: DataTypes.DATEONLY,
-            defaultValue: Sequelize.NOW, // Tanggal otomatis diisi dengan waktu sekarang
+            defaultValue: Sequelize.NOW, 
         },
         monitoringPeriodId: {
             type: DataTypes.INTEGER,
             references: {
-                model: "monitoring_periods", // Nama tabel MonitoringPeriod
+                model: "monitoring_periods",
                 key: "id",
             },
             allowNull: false,
             onDelete: "CASCADE" 
         },
     },
-    {
-        freezeTableName: true,
-    }
 );
 
-MonitoringPeriod.hasMany(Predicts, { foreignKey: "monitoringPeriodId" });
-Predicts.belongsTo(MonitoringPeriod, { foreignKey: "monitoringPeriodId" });
 
 export default Predicts;

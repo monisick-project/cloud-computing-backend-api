@@ -5,7 +5,7 @@ import Notifications from "../models/NotificationModel.js";
 
 // Create Medication for a specific Monitoring Period
 export const createMedication = async (req, res) => {
-    const { medication_name, frequency, before_after_meal, schedule_time } = req.body;
+    const { medication_name, frequency, before_after_meal, startDate, endDate } = req.body;
     const { monitoringPeriodId } = req.params; 
     const userId = req.userId;
     try {
@@ -25,7 +25,8 @@ export const createMedication = async (req, res) => {
             medication_name,
             frequency, 
             before_after_meal,
-            schedule_time, 
+            startDate,
+            endDate,
             monitoringPeriodId, 
         });
         // Buat notifikasi otomatis
@@ -43,7 +44,7 @@ export const getMedications = async (req, res) => {
     try {
         const medications = await Medications.findAll({
             where: { monitoringPeriodId },
-            attributes: ['medication_name', 'frequency', 'before_after_meal', 'schedule_time', 'monitoringPeriodId'],
+            attributes: ['medication_name', 'frequency', 'before_after_meal', 'startData', 'endDate', 'monitoringPeriodId'],
         });
         res.status(200).json({
             message: "Medications retrieved successfully",
@@ -58,7 +59,7 @@ export const getMedications = async (req, res) => {
 // Update Medication
 export const updateMedication = async (req, res) => {
     const { id, monitoringPeriodId } = req.params; 
-    const { medication_name, frequency, before_after_meal, schedule_time } = req.body;
+    const { medication_name, frequency, before_after_meal, startDate, endDate } = req.body;
     const userId = req.userId;  
     try {
         // Cek apakah monitoring period ada dan statusnya tidak expired
@@ -85,7 +86,8 @@ export const updateMedication = async (req, res) => {
                 medication_name,
                 frequency,
                 before_after_meal, 
-                schedule_time,
+                startDate,
+                endDate
             },
             { where: { id, monitoringPeriodId } }
         );
@@ -97,3 +99,40 @@ export const updateMedication = async (req, res) => {
 };
 
 
+// Delete Medication
+export const deleteMedication = async (req, res) => {
+    const { id, monitoringPeriodId } = req.params;
+    const userId = req.userId;
+
+    try {
+        // Cek apakah monitoring period ada dan statusnya tidak expired
+        const monitoringPeriod = await MonitoringPeriod.findOne({
+            where: { id: monitoringPeriodId, user_id: userId },
+        });
+        if (!monitoringPeriod) {
+            return res.status(404).json({ msg: "Monitoring Period not found" });
+        }
+        // Cek jika monitoring period sudah expired
+        if (monitoringPeriod.status === 'expired') {
+            return res.status(400).json({ msg: "Cannot delete medication. Monitoring period is expired." });
+        }
+
+        // Cari medication berdasarkan ID dan monitoringPeriodId
+        const medication = await Medications.findOne({
+            where: { id, monitoringPeriodId },
+        });
+        if (!medication) {
+            return res.status(404).json({ msg: "Medication not found" });
+        }
+
+        // Hapus medication
+        await Medications.destroy({
+            where: { id, monitoringPeriodId }
+        });
+
+        res.status(200).json({ msg: "Medication deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: "An error occurred while deleting the medication" });
+    }
+};

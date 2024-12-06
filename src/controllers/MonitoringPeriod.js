@@ -22,7 +22,7 @@ export const createMonitoringPeriod = async (req, res) => {
 // Get Monitoring Periods for the User
 export const getMonitoringPeriods = async (req, res) => {
     const userId = req.userId;
-    const { status } = req.query; // Menambahkan query parameter untuk status
+    const { status } = req.query; 
     try {
         const whereClause = { user_id: userId };
         if (status) {
@@ -39,7 +39,6 @@ export const getMonitoringPeriods = async (req, res) => {
         res.status(500).json({ msg: "Server error" });
     }
 };
-
 
 // Update Monitoring Period
 export const updateMonitoringPeriod = async (req, res) => {
@@ -72,7 +71,7 @@ export const updateExpiredMonitoringPeriod = async () => {
             { status: 'expired' }, 
             {
                 where: {
-                    end_date: { [Op.lt]: new Date() }, // Jika end_date < hari ini
+                    end_date: { [Op.lt]: new Date() }, 
                     status: 'active', 
                 },
             }
@@ -82,8 +81,6 @@ export const updateExpiredMonitoringPeriod = async () => {
         console.error("Error updating expired monitoring periods:", error);
     }
 };
-
-
 
 // Delete Monitoring Period (Manual)
 export const deleteMonitoringPeriod = async (req, res) => {

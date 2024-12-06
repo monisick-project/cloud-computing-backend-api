@@ -15,7 +15,7 @@ const app = express();
 
 try {
     await db.authenticate();
-    // await Predicts.sync({ alter: true });
+    // await Medications.sync({ alter: true });
     // await db.sync({
     //     force: true
     // });

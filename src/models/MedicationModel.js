@@ -16,8 +16,12 @@ const Medications = db.define('medications', {
         type: DataTypes.STRING, // "before" or "after"
         allowNull: false
     },
-    schedule_time: {
-        type: DataTypes.JSON,
+    startDate: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    endDate: {
+        type: DataTypes.DATE,
         allowNull: false
     },
     monitoringPeriodId: {
@@ -27,12 +31,10 @@ const Medications = db.define('medications', {
             key: 'id',
         },
         allowNull: false,
-        onDelete: "CASCADE" // Cascade delete medications if the monitoring period is deleted
+        onDelete: "CASCADE"
     }
 }, {
     freezeTableName: true
 });
 
-
 export default Medications;
-

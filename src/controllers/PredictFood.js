@@ -82,26 +82,41 @@ export const savePrediction = async (req, res) => {
 };
 
 
-// Mendapat data makanan
+// Mendapat data makanan berdasarkan MonitoringPeriodId
 export const getPredictFood = async (req, res) => {
     const { monitoringPeriodId } = req.params;
 
+    // Validasi monitoringPeriodId
+    if (!monitoringPeriodId) {
+        return res.status(400).json({ msg: "MonitoringPeriodId is required" });
+    }
+
     try {
-        const foodReport = await Food.findAll({
+        // Ambil data prediksi makanan berdasarkan MonitoringPeriodId
+        const predictFood = await Predicts.findAll({
             where: { monitoringPeriodId },
             attributes: [
-                "foodName",
-                "mass", // Breakfast, Lunch, Dinner
-                "fat",
-                "carbohydrates",
-                "protein",
-                "date"
+                "foodName",        
+                "mass",           
+                "fat",            
+                "carbohydrates",   
+                "protein",         
+                "date",           
             ],
+            order: [["date", "ASC"], ["foodName", "ASC"]], 
         });
 
-        res.status(200).json(foodReport);
+        // Jika tidak ada data ditemukan untuk monitoring period tersebut
+        if (predictFood.length === 0) {
+            return res.status(404).json({ msg: "No food data found for the given monitoring period" });
+        }
+            
+        res.status(200).json({
+            msg: "Food data retrieved successfully",
+            data: predictFood,
+        });
     } catch (error) {
-        console.error(error);
+        console.error("Error while fetching food report:", error.message);
         res.status(500).json({ msg: "Server error while fetching food report" });
     }
 };

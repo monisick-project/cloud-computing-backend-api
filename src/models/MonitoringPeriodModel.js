@@ -27,7 +27,7 @@ const MonitoringPeriod = db.define('monitoring_periods', {
     },
     status: {
         type: DataTypes.ENUM('active', 'expired'),
-        defaultValue: 'active', // Status default adalah 'active'
+        defaultValue: 'active', 
     }
 }, {
     freezeTableName: true
@@ -36,7 +36,7 @@ const MonitoringPeriod = db.define('monitoring_periods', {
 // Association: A Monitoring Period has many Medications
 MonitoringPeriod.hasMany(Medications, {
     foreignKey: "monitoringPeriodId",
-    onDelete: "CASCADE", // Cascade delete medications
+    onDelete: "CASCADE", 
     onUpdate: "CASCADE"
 });
 Medications.belongsTo(MonitoringPeriod, {

@@ -4,7 +4,7 @@ import { verifyToken } from "../middleware/verifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import { getActiveMonitoringPeriods } from "../controllers/Homepage.js";
 import { createMonitoringPeriod, getMonitoringPeriods, updateMonitoringPeriod, deleteMonitoringPeriod } from '../controllers/MonitoringPeriod.js';
-import { createMedication, getMedications, updateMedication } from "../controllers/Medication.js";
+import { createMedication, getMedications, updateMedication, deleteMedication } from "../controllers/Medication.js";
 import { getNotifications, updateNotificationStatus } from "../controllers/Notification.js";
 import { createFoodEntry, getFoodEntries, deleteFoodEntry } from "../controllers/Food.js";
 import { createDailyLog, getDailyLogs, updateDailyLog, deleteDailyLog } from "../controllers/DailyLog.js";
@@ -33,6 +33,7 @@ router.delete("/monitoring-periods/:id", verifyToken, deleteMonitoringPeriod);
 router.post("/monitoring-periods/:monitoringPeriodId/medications", verifyToken, createMedication);
 router.get('/monitoring-periods/:monitoringPeriodId/medications', verifyToken, getMedications);
 router.put("/monitoring-periods/:monitoringPeriodId/medications/:id", verifyToken, updateMedication);
+router.delete("/monitoring-periods/:monitoringPeriodId/medications/:id", verifyToken, deleteMedication);
 
 // Notifications Medication
 router.get('/medications/:medicationId/notifications', verifyToken, getNotifications);
