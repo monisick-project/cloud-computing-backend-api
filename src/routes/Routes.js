@@ -1,4 +1,5 @@
 import express from "express";
+import upload from "../config/multerConfig.js"; // Ekspor default
 import { getUsers, Register, Login, Logout } from '../controllers/Users.js';
 import { verifyToken } from "../middleware/verifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
@@ -45,7 +46,7 @@ router.get('/monitoring-periods/:monitoringPeriodId/foods', verifyToken, getFood
 router.delete('/food/:id', verifyToken, deleteFoodEntry);
 
 // Prediction Food
-router.post("/prediction", verifyToken, Prediction);
+router.post('/prediction', upload.single('image'), verifyToken, Prediction);
 router.post("/savepredict", verifyToken, savePrediction);
 router.get("/:monitoringPeriodId/foodspredict", verifyToken, getPredictFood);
 

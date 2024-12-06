@@ -1,45 +1,45 @@
-import express from "express";
 import axios from "axios";
 import Predicts from "../models/PredictFoodModel.js";
 import MonitoringPeriod from "../models/MonitoringPeriodModel.js";
 import { Op } from "sequelize";
+import fs from 'fs';
 
 
 // Endpoint untuk scan makanan dan mendapatkan prediksi
 export const Prediction = async (req, res) => {
-    const { foodImageUrl } = req.body;
-
-    if (!foodImageUrl) {
-        return res.status(400).json({ msg: "Food image URL and food name are required" });
-    }
-
+    const imagePath = req.file.path; // Path sementara gambar yang diunggah
     try {
-        // Panggil API ML /predict
-        const mlResponse = await axios.post("https://monisick-app-ml-1035188713587.asia-southeast2.run.app/predict/", {
-            image: foodImageUrl,
-        });
-
-        const { mass, fat, carbohydrates, protein } = mlResponse.data;
-
-        // Kirimkan hasil prediksi ke frontend
-        res.status(200).json({
-            msg: "Prediction successful",
-            data: { foodName, mass, fat, carbohydrates, protein },
-        });
+      // Baca file dan konversi ke base64
+      const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' });
+  
+      // Kirim gambar ke API ML dalam bentuk base64
+      const response = await axios.post('https://monisick-app-ml-1035188713587.asia-southeast2.run.app/predict/', { image: imageBase64 });
+      const { mass, fats, carbohydrates, protein } = response.data;
+  
+      // Hapus file sementara
+      fs.unlinkSync(imagePath);
+  
+      // Kirim hasil ke frontend
+      res.status(200).json({
+        mass,
+        fats,
+        carbohydrates,
+        protein,
+        imageBase64: `data:image/jpeg;base64,${imageBase64}`, // Format untuk ditampilkan di HTML <img>
+      });
     } catch (error) {
-        console.error("Error calling ML API:", error.message);
-        res.status(500).json({ msg: "Failed to fetch prediction from ML API" });
+      console.error(error);
+  
+      // Hapus file jika ada error
+      if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+  
+      res.status(500).json({ message: 'Failed to process the image' });
     }
 };
 
 // Endpoint untuk menyimpan hasil prediksi
 export const savePrediction = async (req, res) => {
     const { foodName, mass, fat, carbohydrates, protein } = req.body;
-
-    if (!foodName || !mass || !fat || !carbohydrates || !protein) {
-        return res.status(400).json({ msg: "All prediction fields are required" });
-    }
-
     try {
         // Cari semua monitoring period yang aktif
         const activeMonitoringPeriods = await MonitoringPeriod.findAll({
@@ -72,8 +72,7 @@ export const savePrediction = async (req, res) => {
         }
 
         res.status(201).json({
-            msg: "Predictions saved successfully",
-            data: predictions,
+            msg: "Predictions saved successfully"
         });
     } catch (error) {
         console.error("Error saving predictions:", error.message);
