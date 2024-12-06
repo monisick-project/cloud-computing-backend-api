@@ -9,6 +9,7 @@ import { getNotifications, updateNotificationStatus } from "../controllers/Notif
 import { createFoodEntry, getFoodEntries, deleteFoodEntry } from "../controllers/Food.js";
 import { createDailyLog, getDailyLogs, updateDailyLog, deleteDailyLog } from "../controllers/DailyLog.js";
 import { getMedicationReport, getFoodReport, getDailyLogReport, getReportForChart, } from "../controllers/Report.js";
+import { Prediction, savePrediction } from "../controllers/PredictFood.js";
 
 const router = express.Router();
 
@@ -41,6 +42,10 @@ router.patch('/notifications/:id', verifyToken, updateNotificationStatus);
 router.post("/food", verifyToken, createFoodEntry);
 router.get('/monitoring-periods/:monitoringPeriodId/foods', verifyToken, getFoodEntries);
 router.delete('/food/:id', verifyToken, deleteFoodEntry);
+
+// Prediction Food
+router.post("/prediction", verifyToken, Prediction);
+router.post("/savepredict", verifyToken, savePrediction);
 
 // Daily Log
 router.post("/monitoring-periods/:monitoringPeriodId/logs", verifyToken, createDailyLog);
