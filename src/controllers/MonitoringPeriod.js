@@ -31,7 +31,7 @@ export const getMonitoringPeriods = async (req, res) => {
 
         const monitoringPeriods = await MonitoringPeriod.findAll({
             where: whereClause,
-            attributes: ['monitoring_name', 'start_date', 'end_date', 'status'],
+            attributes: ['id', 'monitoring_name', 'start_date', 'end_date', 'status'],
         });
         res.json(monitoringPeriods);
     } catch (error) {
