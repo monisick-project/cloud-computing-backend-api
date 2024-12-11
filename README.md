@@ -9,7 +9,7 @@ URL : https://monisick-backend-1035188713587.asia-southeast2.run.app
 
 
 ## Cloud Technology
-<img src="https://github.com/user-attachments/assets/34a53d61-5daf-4ba2-9697-16ff128b5801" alt="Google Cloud" width="400"/>
+<img src="https://github.com/user-attachments/assets/34a53d61-5daf-4ba2-9697-16ff128b5801" alt="Google Cloud"/>
 
 ### **Cloud Run**
 <img src="https://github.com/user-attachments/assets/36960dad-4022-455e-ade6-26a87c251df6" alt="Cloud Run" width="100"/>
