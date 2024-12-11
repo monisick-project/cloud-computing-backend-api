@@ -76,8 +76,10 @@ Monisick uses Continuous Deployment to automatically build and deploy updates to
      
 7. **Verify Deployment:**
    - Visit the service URL provided by Cloud Run to access your deployed application.
-  
-## Additional Resaource 
+
+
+## Additional Resources
+
 ### Repository ML-API
 - [ML API Repository](https://github.com/monisick-project/cloud-computing-ml-Api.git)
 
