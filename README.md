@@ -50,28 +50,34 @@ Storage Class : Standard
 ## Deployment Process
 
 ### Continuous Deployment from GitHub
-Monisick utilizes Continuous Deployment to automatically build and deploy updates to Cloud Run whenever changes are pushed to the main branch.
+Monisick uses Continuous Deployment to automatically build and deploy updates to Google Cloud Run from a GitHub repository.
 
-#### Steps to Configure
-1. **Connect Repository**:  
-   Link your GitHub repository to Google Cloud Platform via the Cloud Build service.
-   - Navigate to **Cloud Build** in the GCP Console.
-   - Create a new trigger and select the repository to monitor.
+#### Steps 
+1. **Create a Cloud Run Service:**
+   - Go to Cloud Run in Google Cloud Console.
+   - Click Create Service.
+   - Choose Continuously deploy from a repository and select GitHub.
 
-2. **Build Configuration**:  
-   Ensure a `cloudbuild.yaml` file exists in the root directory of your repository. Example configuration:
-   ```yaml
-   steps:
-   - name: 'gcr.io/cloud-builders/docker'
-     args: ['build', '-t', 'gcr.io/$PROJECT_ID/monisick-backend', '.']
-   - name: 'gcr.io/cloud-builders/gcloud'
-     args: ['run', 'deploy', 'monisick-backend', '--image', 'gcr.io/$PROJECT_ID/monisick-backend', '--region', 'asia-southeast2']
+2. **Connect GitHub Repository:**
+   - Authorize Google Cloud to access your GitHub account.
+   - Select the repository to use.
 
-   images:
-   - 'gcr.io/$PROJECT_ID/monisick-backend'
-   ```
+3. **Configure Build with Cloud Build:**  
+   - Google Cloud will create a Cloud Build Trigger automatically.
+   - Optionally, provide a custom cloudbuild.yaml file for build steps.
 
-3. **Deploy to Cloud Run**:  
-   Once configured, every push to the monitored branch will:
-   - Build the container image.
-   - Deploy the updated container to Cloud Run.
+4. **Create the Service:**
+   - Choose the branch (e.g., main).
+   - Select Region (e.g., asia-southeast2).
+   - Click Create.
+     
+5. **Automatic Deployment:**
+   - Cloud Build will automatically build and deploy the app to Cloud Run whenever changes are pushed to the main branch.
+     
+7. **Verify Deployment:**
+   - Visit the service URL provided by Cloud Run to access your deployed application.
+  
+## Additional Resaource 
+### Repository ML-API
+- [ML API Repository](https://github.com/monisick-project/cloud-computing-ml-Api.git)
+
