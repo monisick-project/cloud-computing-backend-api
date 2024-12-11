@@ -11,7 +11,7 @@ Location : asia-southeast2 (Jakarta)
 Memory   : 512MiB  
 vCPUs    : 1  
 ```
-<img src="https://github.com/user-attachments/assets/36960dad-4022-455e-ade6-26a87c251df6" alt="Cloud Run" width="400"/>
+<img src="https://github.com/user-attachments/assets/36960dad-4022-455e-ade6-26a87c251df6" alt="Cloud Run" width="80"/>
 
 ---
 
